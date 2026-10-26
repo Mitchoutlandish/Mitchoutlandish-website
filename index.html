@@ -1,278 +1,727 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MITCH OUTLANDISH | Official Space-Nova Portfolio</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mitch Outlandish | Official Space-Nova Portfolio</title>
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        spaceBlack: '#0a0a0c',
+                        spaceCard: '#121118',
+                        cosmicViolet: '#8b5cf6',
+                        emeraldGreen: '#1db954',
+                        applePink: '#fa243c',
+                        youtubeRed: '#ff0000',
+                        tidalBlue: '#00ffff',
+                        amazonOrange: '#ff9900',
+                        deezerPink: '#ef4444',
+                        tiktokPink: '#ff0050'
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        rajdhani: ['Rajdhani', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow-violet': '0 0 25px rgba(139, 92, 246, 0.4), 0 0 50px rgba(139, 92, 246, 0.15)',
+                        'glow-emerald': '0 0 25px rgba(29, 185, 84, 0.4), 0 0 50px rgba(29, 185, 84, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap');
-        
         body {
-            background-color: #030208;
-            color: #e2e8f0;
+            background-color: #0a0a0c;
+            color: #f3f4f6;
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
         }
 
-        .font-orbitron { font-family: 'Orbitron', sans-serif; }
-
-        .nova-glow-emerald {
-            text-shadow: 0 0 12px rgba(16, 185, 129, 0.8), 0 0 24px rgba(16, 185, 129, 0.4);
+        .glass-panel {
+            background: rgba(18, 17, 24, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.25);
         }
 
-        .nova-glow-violet {
-            text-shadow: 0 0 12px rgba(139, 92, 246, 0.8), 0 0 24px rgba(139, 92, 246, 0.4);
+        .glass-panel-hover {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .glass-card {
-            background: rgba(13, 10, 25, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .glass-panel-hover:hover {
+            border-color: rgba(29, 185, 84, 0.7);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 35px -10px rgba(29, 185, 84, 0.35);
         }
 
-        .glass-card:hover {
-            border-color: rgba(16, 185, 129, 0.6);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.25);
+        .avatar-glow {
+            box-shadow: 0 0 20px #8b5cf6, 0 0 40px #1db954;
         }
 
-        canvas#stardust {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f1b2e;
+            border: 1px solid #8b5cf6;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1db954;
+        }
+
+        /* Continuous Platform Marquee */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: 200%;
+            animation: marquee 25s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
         }
     </style>
 </head>
-<body class="relative min-h-screen pb-28">
+<body class="relative min-h-screen selection:bg-emeraldGreen selection:text-black pb-28">
 
-    <!-- Stardust Dynamic Canvas -->
-    <canvas id="stardust"></canvas>
+    <!-- Interactive Space Nova Canvas Animation -->
+    <canvas id="spaceCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
 
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-
-        <!-- Header / Navigation -->
-        <header class="flex items-center justify-between py-4 border-b border-purple-900/40 glass-card px-6 rounded-2xl mb-8">
-            <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-500 to-violet-600 p-0.5">
-                    <div class="w-full h-full bg-black rounded-full flex items-center justify-center font-orbitron font-bold text-emerald-400">MO</div>
-                </div>
-                <div>
-                    <h1 class="font-orbitron font-extrabold text-xl tracking-wider text-white nova-glow-emerald">MITCH OUTLANDISH</h1>
-                    <p class="text-xs text-purple-400 tracking-widest uppercase">Official Space-Nova Hub</p>
-                </div>
-            </div>
-
-            <!-- Header Streaming Quick Badges -->
-            <div class="hidden md:flex items-center space-x-3">
-                <a href="https://distrokid.com/hyperfollow/mtch4/outlandish" target="_blank" class="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-xs font-semibold hover:bg-emerald-500 hover:text-black transition">
-                    <i class="fa-brands fa-spotify mr-1"></i> Spotify
-                </a>
-                <a href="https://distrokid.com/hyperfollow/mtch4/outlandish" target="_blank" class="px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/40 text-violet-300 text-xs font-semibold hover:bg-violet-600 hover:text-white transition">
-                    <i class="fa-brands fa-apple mr-1"></i> Apple Music
-                </a>
-                <a href="https://distrokid.com/hyperfollow/mitchoutlandish/risk-it" target="_blank" class="px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/40 text-red-400 text-xs font-semibold hover:bg-red-600 hover:text-white transition">
-                    <i class="fa-brands fa-youtube mr-1"></i> YouTube
-                </a>
-            </div>
-        </header>
-
-        <!-- Main Spotlight Banner: OUTLANDISH Album -->
-        <section class="glass-card rounded-3xl p-6 md:p-10 mb-12 relative overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-10 -top-10 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                <div class="md:col-span-5 flex justify-center">
-                    <div class="relative group cursor-pointer" onclick="openMultiPlatformModal('Outlandish', 'FAVORITE ALBUM', 'violet', 'https://distrokid.com/hyperfollow/mtch4/outlandish')">
-                        <div class="w-64 h-64 md:w-72 md:h-72 rounded-2xl bg-gradient-to-br from-violet-900 via-purple-950 to-black p-4 border border-emerald-500/30 flex flex-col justify-between shadow-2xl relative overflow-hidden">
-                            <div class="absolute inset-0 bg-emerald-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition"></div>
-                            <span class="text-xs font-orbitron bg-emerald-500 text-black font-bold px-2.5 py-1 rounded-full w-max z-10">FAVORITE ALBUM</span>
-                            <div class="text-center z-10">
-                                <i class="fa-solid fa-atom text-6xl text-emerald-400 mb-2 nova-glow-emerald"></i>
-                                <h3 class="font-orbitron font-black text-2xl text-white">OUTLANDISH</h3>
-                            </div>
-                            <div class="flex justify-between items-end z-10 text-xs text-purple-300 font-orbitron">
-                                <span>25+ STORES</span>
-                                <span class="text-emerald-400"><i class="fa-solid fa-bolt"></i> STREAM NOW</span>
-                            </div>
-                        </div>
+    <!-- Header Navigation Bar -->
+    <header class="fixed top-0 left-0 w-full z-40 glass-panel border-b border-purple-900/30 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="relative w-11 h-11 rounded-full p-0.5 bg-gradient-to-r from-cosmicViolet to-emeraldGreen avatar-glow">
+                    <div class="w-full h-full rounded-full bg-black overflow-hidden flex items-center justify-center">
+                        <img src="mitch_profile.jpg" onerror="this.onerror=null; this.src='https://placehold.co/200x200/0a0a0c/1db954?text=MO';" alt="Mitch Outlandish Avatar" class="w-full h-full object-cover">
                     </div>
                 </div>
+                <div>
+                    <span class="font-orbitron font-extrabold text-lg md:text-xl tracking-wider text-white group-hover:text-emeraldGreen transition-colors block leading-tight">
+                        MITCHOUTLANDISH
+                    </span>
+                    <span class="text-xs text-cosmicViolet font-orbitron tracking-widest block">ARTIST / CREATOR</span>
+                </div>
+            </a>
 
-                <div class="md:col-span-7 space-y-4">
-                    <span class="text-emerald-400 font-orbitron text-xs font-bold tracking-widest uppercase"><i class="fa-solid fa-star mr-1"></i> All-Time Favorite Drop</span>
-                    <h2 class="font-orbitron font-black text-3xl sm:text-4xl text-white leading-tight">OUTLANDISH</h2>
-                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
-                        The definitive space-nova album experience by Mitch Outlandish. Distributed across Spotify, Apple Music, Tidal, Amazon, and 25+ global platforms.
+            <!-- Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 font-orbitron text-xs tracking-widest text-gray-300">
+                <a href="#hero" class="hover:text-emeraldGreen transition-colors">HOME</a>
+                <a href="#favorite-album" class="hover:text-emeraldGreen transition-colors">OUTLANDISH</a>
+                <a href="#music" class="hover:text-emeraldGreen transition-colors">PLAYER</a>
+                <a href="#platforms" class="hover:text-emeraldGreen transition-colors">25+ STORES</a>
+                <a href="#discography" class="hover:text-emeraldGreen transition-colors">DISCOGRAPHY</a>
+            </nav>
+
+            <!-- Merch Button Trigger -->
+            <button onclick="toggleMerchDrawer()" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-900/40 border border-cosmicViolet/50 text-white font-orbitron text-xs tracking-wider hover:bg-cosmicViolet hover:text-black transition-all">
+                <i class="fa-solid fa-bag-shopping"></i> MERCH
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="relative z-10 pt-28 px-4 md:px-8 max-w-7xl mx-auto space-y-16">
+
+        <!-- Hero Section -->
+        <section id="hero" class="glass-panel rounded-3xl p-6 md:p-10 relative overflow-hidden border border-purple-500/20 shadow-glow-violet">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/60 border border-cosmicViolet/40 text-emeraldGreen text-xs font-orbitron tracking-widest uppercase">
+                        <span class="w-2 h-2 rounded-full bg-emeraldGreen animate-ping"></span>
+                        Artist / Creator. Outlandish Vibe.
+                    </div>
+
+                    <h1 class="font-orbitron font-black text-4xl sm:text-6xl text-white uppercase tracking-tight leading-none">
+                        MITCH <br />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emeraldGreen via-cosmicViolet to-purple-400">
+                            OUTLANDISH
+                        </span>
+                    </h1>
+
+                    <p class="text-gray-300 text-base md:text-lg max-w-xl font-medium">
+                        Official music releases, space-nova soundscapes, and high-energy hip-hop drops delivered globally to 25+ streaming platforms.
                     </p>
 
-                    <div class="flex flex-wrap gap-3 pt-2">
-                        <a href="https://distrokid.com/hyperfollow/mtch4/outlandish" target="_blank" class="px-6 py-3 rounded-xl bg-emerald-500 text-black font-orbitron font-bold text-sm hover:bg-emerald-400 transition flex items-center space-x-2">
-                            <i class="fa-solid fa-bolt"></i>
-                            <span>HYPERFOLLOW OUTLANDISH</span>
+                    <!-- Quick Streaming Badges -->
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-2.5 pt-2">
+                        <a href="https://open.spotify.com/artist/2cQruujOPlTXNHsZo3rvhR" target="_blank" class="px-3.5 py-2 rounded-xl bg-emeraldGreen/20 border border-emeraldGreen/40 text-emeraldGreen hover:bg-emeraldGreen hover:text-black text-xs font-orbitron font-bold flex items-center gap-2 transition-all">
+                            <i class="fa-brands fa-spotify text-base"></i> SPOTIFY
                         </a>
-                        <a href="https://distrokid.com/hyperfollow/mitchoutlandish/risk-it" target="_blank" class="px-6 py-3 rounded-xl bg-violet-600/30 border border-violet-500/50 text-white font-orbitron font-bold text-sm hover:bg-violet-600 transition flex items-center space-x-2">
-                            <i class="fa-solid fa-play"></i>
-                            <span>STREAM 'RISK IT'</span>
+                        <a href="https://music.apple.com/us/artist/mitchoutlandish/1758568790" target="_blank" class="px-3.5 py-2 rounded-xl bg-applePink/20 border border-applePink/40 text-applePink hover:bg-applePink hover:text-white text-xs font-orbitron font-bold flex items-center gap-2 transition-all">
+                            <i class="fa-brands fa-apple text-base"></i> APPLE MUSIC
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCuwQcfkjCwQ_ZLtFcyLFWMg" target="_blank" class="px-3.5 py-2 rounded-xl bg-youtubeRed/20 border border-youtubeRed/40 text-youtubeRed hover:bg-youtubeRed hover:text-white text-xs font-orbitron font-bold flex items-center gap-2 transition-all">
+                            <i class="fa-brands fa-youtube text-base"></i> YOUTUBE
+                        </a>
+                        <a href="https://www.instagram.com/mitchoutlandish/" target="_blank" class="px-3.5 py-2 rounded-xl bg-purple-600/20 border border-purple-500/40 text-purple-300 hover:bg-purple-600 hover:text-white text-xs font-orbitron font-bold flex items-center gap-2 transition-all">
+                            <i class="fa-brands fa-instagram text-base"></i> INSTAGRAM
+                        </a>
+                        <a href="https://distrokid.com/hyperfollow/mitchoutlandish/risk-it?ref=release" target="_blank" class="px-3.5 py-2 rounded-xl bg-cosmicViolet/20 border border-cosmicViolet/50 text-emeraldGreen hover:bg-cosmicViolet hover:text-black text-xs font-orbitron font-extrabold flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-bolt text-base"></i> HYPERFOLLOW
                         </a>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- Discography Grid -->
-        <section class="mb-16">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-                <div>
-                    <h3 class="font-orbitron font-bold text-2xl text-white">SPACE-NOVA <span class="text-emerald-400">DISCOGRAPHY</span></h3>
-                    <p class="text-xs text-gray-400">Click any drop to open multi-platform smart links across all streaming services.</p>
-                </div>
-            </div>
-
-            <div id="discographyGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Injected via JavaScript -->
-            </div>
-        </section>
-
-    </div>
-
-    <!-- DistroKid Style Multi-Platform Modal -->
-    <div id="multiPlatformModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-md w-full rounded-3xl p-6 relative border border-emerald-500/40">
-            <button onclick="closeMultiPlatformModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="text-center mb-6">
-                <div id="modalCoverContainer" class="w-32 h-32 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-violet-900 to-black p-3 border border-emerald-500/30 flex flex-col items-center justify-center">
-                    <i class="fa-solid fa-compact-disc text-4xl text-emerald-400"></i>
-                </div>
-                <span id="modalTrackType" class="text-xs font-orbitron px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-bold">SINGLE</span>
-                <h3 id="modalTrackTitle" class="font-orbitron font-extrabold text-2xl text-white mt-2">Track Title</h3>
-                <p class="text-xs text-purple-400">Choose your preferred streaming platform:</p>
-            </div>
-
-            <div class="space-y-3">
-                <a id="hfSpotifyBtn" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-[#1DB954]/20 border border-[#1DB954]/50 text-white font-orbitron font-bold text-sm hover:bg-[#1DB954] hover:text-black transition flex items-center justify-between">
-                    <span><i class="fa-brands fa-spotify mr-2"></i> Spotify</span>
-                    <i class="fa-solid fa-chevron-right text-xs"></i>
-                </a>
-                <a id="hfAppleBtn" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-violet-600/20 border border-violet-500/50 text-white font-orbitron font-bold text-sm hover:bg-violet-600 transition flex items-center justify-between">
-                    <span><i class="fa-brands fa-apple mr-2"></i> Apple Music</span>
-                    <i class="fa-solid fa-chevron-right text-xs"></i>
-                </a>
-                <a id="hfYoutubeBtn" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-red-600/20 border border-red-500/50 text-white font-orbitron font-bold text-sm hover:bg-red-600 transition flex items-center justify-between">
-                    <span><i class="fa-brands fa-youtube mr-2"></i> YouTube Music</span>
-                    <i class="fa-solid fa-chevron-right text-xs"></i>
-                </a>
-                <a id="hyperfollowBtn" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-emerald-500 text-black font-orbitron font-bold text-sm hover:bg-emerald-400 transition flex items-center justify-between text-center">
-                    <span class="w-full"><i class="fa-solid fa-bolt mr-1"></i> Open DistroKid HyperFollow</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Persistent Audio Player Bar -->
-    <div class="fixed bottom-0 left-0 right-0 z-40 bg-black/90 backdrop-blur-xl border-t border-purple-900/50 px-4 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-                    <i class="fa-solid fa-headphones"></i>
-                </div>
-                <div>
-                    <h4 class="font-orbitron font-bold text-xs text-white">Mitch Outlandish Hub</h4>
-                    <p class="text-[10px] text-emerald-400">Delivered to 25+ Streaming Stores</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-3">
-                <a href="https://distrokid.com/hyperfollow/mtch4/outlandish" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-500 text-black font-orbitron font-bold text-xs hover:bg-emerald-400 transition">
-                    LISTEN NOW
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const catalog = [
-            {
-                title: "Outlandish",
-                type: "FAVORITE ALBUM",
-                link: "https://distrokid.com/hyperfollow/mtch4/outlandish"
-            },
-            {
-                title: "Risk It",
-                type: "FEATURED SINGLE",
-                link: "https://distrokid.com/hyperfollow/mitchoutlandish/risk-it"
-            },
-            {
-                title: "Outlandish 2",
-                type: "ALBUM",
-                link: "https://distrokid.com/hyperfollow/mtch4/outlandish"
-            },
-            {
-                title: "Time Capsule",
-                type: "EP / ALBUM",
-                link: "https://distrokid.com/hyperfollow/mtch4/outlandish"
-            },
-            {
-                title: "U Mäkẽ me SIČĶ",
-                type: "SINGLE",
-                link: "https://distrokid.com/hyperfollow/mitchoutlandish/risk-it"
-            },
-            {
-                title: "Weekday",
-                type: "SINGLE",
-                link: "https://distrokid.com/hyperfollow/mitchoutlandish/risk-it"
-            },
-            {
-                title: "Dead Presidents",
-                type: "SINGLE",
-                link: "https://distrokid.com/hyperfollow/mtch4/outlandish"
-            },
-            {
-                title: "Tell Me Sum",
-                type: "SINGLE",
-                link: "https://distrokid.com/hyperfollow/mitchoutlandish/risk-it"
-            }
-        ];
-
-        function renderDiscography() {
-            const grid = document.getElementById('discographyGrid');
-            grid.innerHTML = catalog.map(item => `
-                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between group cursor-pointer" onclick="openMultiPlatformModal('${item.title}', '${item.type}', 'violet', '${item.link}')">
-                    <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-xs font-orbitron px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">${item.type}</span>
-                            <span class="text-gray-400 group-hover:text-emerald-400 text-xs"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
-                        </div>
-                        <div class="my-6 text-center">
-                            <i class="fa-solid fa-compact-disc text-5xl text-violet-400 group-hover:text-emerald-400 transition nova-glow-violet"></i>
-                            <h4 class="font-orbitron font-bold text-lg text-white mt-3">${item.title}</h4>
-                            <p class="text-xs text-gray-400">Mitch Outlandish</p>
+                <!-- Hero Profile Graphic -->
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-full max-w-sm aspect-[4/5] rounded-2xl p-1 bg-gradient-to-br from-cosmicViolet via-purple-600 to-emeraldGreen shadow-glow-violet group">
+                        <div class="w-full h-full rounded-xl overflow-hidden relative bg-black">
+                            <img src="mitch_profile.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x750/0a0a0c/8b5cf6?text=MITCH+OUTLANDISH';" alt="Mitch Outlandish Hero" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-spaceBlack via-transparent to-transparent opacity-75"></div>
+                            <div class="absolute bottom-4 left-4 right-4 p-3 glass-panel rounded-lg border border-white/10">
+                                <p class="font-orbitron text-xs text-emeraldGreen uppercase tracking-widest">Artist Profile</p>
+                                <p class="text-sm font-semibold text-white">Mitchoutlandish</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="pt-2">
-                        <button class="w-full py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-bold group-hover:bg-emerald-500 group-hover:text-black transition flex items-center justify-center space-x-1 font-orbitron">
-                            <i class="fa-solid fa-bolt"></i> <span>STREAM SMART LINK</span>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FAVORITE ALL-TIME ALBUM FEATURE SECTION -->
+        <section id="favorite-album" class="glass-panel rounded-3xl p-6 md:p-10 border-2 border-cosmicViolet/60 shadow-glow-violet relative overflow-hidden">
+            <div class="absolute top-0 right-0 px-6 py-2 bg-gradient-to-l from-cosmicViolet to-emeraldGreen text-black font-orbitron font-extrabold text-xs tracking-widest rounded-bl-2xl uppercase">
+                ★ ALL-TIME FAVORITE ALBUM ★
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center pt-4">
+                <div class="md:col-span-5 flex justify-center">
+                    <div class="w-64 h-64 md:w-80 md:h-80 rounded-2xl overflow-hidden border-2 border-emeraldGreen shadow-glow-emerald relative group cursor-pointer" onclick="openMultiPlatformModal('Outlandish', 'FAVORITE ALBUM', 'violet', 'https://distrokid.com/hyperfollow/mtch4/outlandish?ref=release')">
+                        <div id="favoriteAlbumCover" class="w-full h-full"></div>
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors flex items-center justify-center">
+                            <span class="px-4 py-2 rounded-xl bg-black/80 text-emeraldGreen font-orbitron text-xs font-bold border border-emeraldGreen/50 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-play mr-1"></i> LAUNCH HYPERFOLLOW
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 space-y-5 text-center md:text-left">
+                    <span class="px-3 py-1 rounded-full bg-purple-950 border border-cosmicViolet text-cosmicViolet font-orbitron text-xs tracking-widest font-bold">
+                        CULT CLASSIC PROJECT
+                    </span>
+                    <h2 class="font-orbitron font-black text-3xl md:text-5xl text-white uppercase tracking-tight">
+                        OUTLANDISH
+                    </h2>
+                    <p class="text-gray-300 text-sm md:text-base leading-relaxed max-w-xl">
+                        The flagship album defining the Mitch Outlandish soundscape. Experience the raw energy, dark atmospheric production, and outlandish flows across all major streaming services.
+                    </p>
+
+                    <div class="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
+                        <a href="https://distrokid.com/hyperfollow/mtch4/outlandish?ref=release" target="_blank" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cosmicViolet to-emeraldGreen text-black font-orbitron font-black text-xs tracking-wider hover:opacity-90 transition-opacity shadow-lg flex items-center gap-2">
+                            <i class="fa-solid fa-fire text-base"></i> STREAM 'OUTLANDISH' ALBUM
+                        </a>
+                        <button onclick="openMultiPlatformModal('Outlandish', 'FAVORITE ALBUM', 'violet', 'https://distrokid.com/hyperfollow/mtch4/outlandish?ref=release')" class="px-6 py-3.5 rounded-xl glass-panel text-white font-orbitron font-bold text-xs tracking-wider hover:border-emeraldGreen transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group"></i> ALL PLATFORM LINKS
                         </button>
                     </div>
                 </div>
-            `).join('');
+            </div>
+        </section>
+
+        <!-- Spotify Player & Top Track Focus Player -->
+        <section id="music" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div class="lg:col-span-7 glass-panel rounded-2xl p-4 border border-purple-500/20">
+                <div class="flex items-center justify-between mb-3 px-2">
+                    <span class="font-orbitron font-bold text-sm text-white flex items-center gap-2">
+                        <i class="fa-brands fa-spotify text-emeraldGreen text-lg"></i> OFFICIAL SPOTIFY PLAYER
+                    </span>
+                    <span class="text-xs text-gray-400 font-orbitron">Live Top Tracks</span>
+                </div>
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/artist/2cQruujOPlTXNHsZo3rvhR?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <!-- Featured Track Focus Card (Risk It & Top Singles) -->
+            <div class="lg:col-span-5 glass-panel rounded-2xl p-6 border border-emeraldGreen/30 space-y-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-xl overflow-hidden border border-cosmicViolet flex-shrink-0 bg-purple-950/80 flex items-center justify-center">
+                        <i class="fa-solid fa-bolt text-3xl text-emeraldGreen animate-pulse"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs text-emeraldGreen font-orbitron tracking-widest block">FEATURED SINGLE RELEASE</span>
+                        <h3 class="font-orbitron font-bold text-lg text-white">Risk It</h3>
+                        <p class="text-xs text-gray-400 font-orbitron">Mitchoutlandish</p>
+                    </div>
+                </div>
+
+                <p class="text-xs text-gray-300 font-medium leading-relaxed">
+                    Check out the official HyperFollow release page for 'Risk It' or select any track from the discography below to stream on your favorite service.
+                </p>
+
+                <div class="space-y-2">
+                    <a href="https://distrokid.com/hyperfollow/mitchoutlandish/risk-it?ref=release" target="_blank" class="w-full py-3 rounded-xl bg-gradient-to-r from-emeraldGreen to-cosmicViolet text-black font-orbitron font-extrabold text-xs tracking-wider hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> OPEN HYPERFOLLOW: RISK IT
+                    </a>
+                    <button onclick="openMultiPlatformModal('Risk It', 'SINGLE', 'green', 'https://distrokid.com/hyperfollow/mitchoutlandish/risk-it?ref=release')" class="w-full py-2.5 rounded-xl glass-panel text-white font-orbitron font-bold text-xs hover:border-emeraldGreen transition-all">
+                        SELECT OTHER PLATFORMS
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 25+ STREAMING PLATFORMS SHOWCASE SECTION -->
+        <section id="platforms" class="glass-panel rounded-3xl p-6 md:p-8 border border-purple-500/30 space-y-6 overflow-hidden">
+            <div class="text-center space-y-2">
+                <span class="px-3 py-1 rounded-full bg-emeraldGreen/20 text-emeraldGreen font-orbitron text-[10px] tracking-widest font-bold border border-emeraldGreen/40 uppercase">
+                    DISTROKID GLOBAL NETWORK
+                </span>
+                <h2 class="font-orbitron font-extrabold text-2xl md:text-3xl text-white">
+                    DELIVERED TO <span class="text-emeraldGreen">25+ STREAMING STORES</span>
+                </h2>
+                <p class="text-gray-400 text-xs md:text-sm max-w-xl mx-auto font-medium">
+                    Mitch Outlandish music is distributed simultaneously across all major worldwide platforms, digital download stores, and social channels.
+                </p>
+            </div>
+
+            <!-- Platform Icons Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 pt-2">
+                <div class="glass-panel p-3 rounded-xl border border-white/5 hover:border-emeraldGreen flex items-center gap-2 text-gray-200 transition-colors">
+                    <i class="fa-brands fa-spotify text-emeraldGreen text-lg"></i>
+                    <span class="text-xs font-orbitron font-semibold">Spotify</span>
+                </div>
+                <div class="glass-panel p-3 rounded-xl border border-white/5 hover:border-applePink flex items-center gap-2 text-gray-200 transition-colors">
+                    <i class="fa-brands fa-apple text-applePink text-lg"></i>
+                    <span class="text-xs font-orbitron font-semibold">Apple Music</span>
+                </div>
+                <div class="glass-panel p-3 rounded-xl border border-white/5 hover:border-youtubeRed flex items-center gap-2 text-gray-200 transition-colors">
+                    <i class="fa-brands fa-youtube text-youtubeRed text-lg"></i>
+                    <span class="text-xs font-orbitron font-semibold">YT Music</span>
+                </div>
+                <div class="glass-panel p-3 rounded-xl border border-white/5 hover:border-tiktokPink flex items-center gap-2 text-gray-200 transition-colors">
+                    <i class="fa-brands fa-tiktok text-tiktokPink text-lg"></i>
+                    <span class="text-xs font-orbitron font-semibold">TikTok</span>
+                </div>
+                <div class="glass-panel p-3 rounded-xl border border-white/5 hover:border-purple-400 flex items-center gap-2 text-gray-200 transition-colors">
+                    <i class="fa-brands fa-instagram text-purple-400 text-lg"></i>
+                    <span class="text-xs font-orbitron font-semibold">Instagram</span>
+                </div>
+                <div class="glass-panel p-3 rounded-xl border border-white/5 hover:border-amber-400 flex items-center gap-2 text-gray-200 transition-colors">
+                    <i class="fa-brands fa-amazon text-amber-400 text-lg"></i>
+                    <span class="text-xs font-orbitron font-semibold">Amazon</span>
+                </div>
+                <div class="glass-panel p-3 rounded-xl border border-white/5 hover:border-cyan-400 flex items-center gap-2 text-gray-200 transition-colors">
+                    <i class="fa-solid fa-wave-square text-cyan-400 text-lg"></i>
+                    <span class="text-xs font-orbitron font-semibold">Tidal</span>
+                </div>
+                <div class="glass-panel p-3 rounded-xl border border-white/5 hover:border-deezerPink flex items-center gap-2 text-gray-200 transition-colors">
+                    <i class="fa-solid fa-compact-disc text-deezerPink text-lg"></i>
+                    <span class="text-xs font-orbitron font-semibold">Deezer</span>
+                </div>
+            </div>
+
+            <!-- Animated Marquee Banner for 25+ Services -->
+            <div class="relative w-full overflow-hidden bg-purple-950/40 rounded-xl py-3 border border-cosmicViolet/30">
+                <div class="animate-marquee space-x-8 font-orbitron text-xs text-gray-300 font-semibold tracking-wider">
+                    <span>• SPOTIFY</span>
+                    <span>• APPLE MUSIC</span>
+                    <span>• ITUNES</span>
+                    <span>• TIKTOK</span>
+                    <span>• INSTAGRAM / FACEBOOK</span>
+                    <span>• YOUTUBE MUSIC</span>
+                    <span>• AMAZON MUSIC</span>
+                    <span>• TIDAL</span>
+                    <span>• DEEZER</span>
+                    <span>• PANDORA</span>
+                    <span>• IHEARTRADIO</span>
+                    <span>• BOOMPLAY</span>
+                    <span>• KKBOX</span>
+                    <span>• NETEASE MUSIC</span>
+                    <span>• TENCENT / QQ</span>
+                    <span>• SAAVN</span>
+                    <span>• QOBUZ</span>
+                    <span>• NAPSTER</span>
+                    <span>• SHAZAM</span>
+                    <span>• YANDEX</span>
+                    <span>• ADAPTR</span>
+                    <span>• FLO</span>
+                    <!-- Duplicate loop for smooth continuous animation -->
+                    <span>• SPOTIFY</span>
+                    <span>• APPLE MUSIC</span>
+                    <span>• ITUNES</span>
+                    <span>• TIKTOK</span>
+                    <span>• INSTAGRAM / FACEBOOK</span>
+                    <span>• YOUTUBE MUSIC</span>
+                    <span>• AMAZON MUSIC</span>
+                    <span>• TIDAL</span>
+                    <span>• DEEZER</span>
+                    <span>• PANDORA</span>
+                    <span>• IHEARTRADIO</span>
+                    <span>• BOOMPLAY</span>
+                    <span>• KKBOX</span>
+                    <span>• NETEASE MUSIC</span>
+                    <span>• TENCENT / QQ</span>
+                    <span>• SAAVN</span>
+                    <span>• QOBUZ</span>
+                    <span>• NAPSTER</span>
+                    <span>• SHAZAM</span>
+                    <span>• YANDEX</span>
+                    <span>• ADAPTR</span>
+                    <span>• FLO</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Discography Section -->
+        <section id="discography" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="font-orbitron font-extrabold text-3xl text-white">
+                        SPACE-NOVA <span class="text-emeraldGreen">DISCOGRAPHY</span>
+                    </h2>
+                    <p class="text-gray-400 text-sm">Select any drop to open streaming options across all platforms.</p>
+                </div>
+
+                <!-- Discography Filters -->
+                <div class="flex gap-2 font-orbitron text-xs">
+                    <button onclick="filterCatalog('all', this)" class="catalog-btn px-4 py-2 rounded-lg bg-emeraldGreen text-black font-bold">ALL</button>
+                    <button onclick="filterCatalog('album', this)" class="catalog-btn px-4 py-2 rounded-lg glass-panel text-white hover:border-emeraldGreen">ALBUMS</button>
+                    <button onclick="filterCatalog('single', this)" class="catalog-btn px-4 py-2 rounded-lg glass-panel text-white hover:border-emeraldGreen">SINGLES</button>
+                    <button onclick="filterCatalog('ep', this)" class="catalog-btn px-4 py-2 rounded-lg glass-panel text-white hover:border-emeraldGreen">EPs</button>
+                </div>
+            </div>
+
+            <!-- Discography Grid -->
+            <div id="catalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Track Cards dynamically rendered via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Video Section -->
+        <section id="video" class="glass-panel rounded-3xl p-8 border border-purple-500/20 text-center space-y-4">
+            <h2 class="font-orbitron font-extrabold text-3xl text-white">OFFICIAL <span class="text-youtubeRed">VISUALS</span></h2>
+            <p class="text-gray-300 text-sm max-w-xl mx-auto">Watch official music videos, visualizers, and studio sessions on YouTube.</p>
+            <button onclick="toggleVideoModal()" class="px-8 py-3 rounded-xl bg-youtubeRed text-white font-orbitron font-bold text-xs tracking-widest hover:scale-105 transition-transform inline-flex items-center gap-2 shadow-lg">
+                <i class="fa-brands fa-youtube text-lg"></i> WATCH YOUTUBE PLAYER
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Persistent Bottom Audio Player Bar -->
+    <div class="fixed bottom-0 left-0 w-full z-40 glass-panel border-t border-purple-500/30 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3 w-1/4">
+                <div class="w-10 h-10 rounded-lg overflow-hidden bg-purple-950 flex-shrink-0 flex items-center justify-center border border-cosmicViolet">
+                    <i class="fa-solid fa-music text-emeraldGreen"></i>
+                </div>
+                <div class="hidden sm:block truncate">
+                    <p class="font-orbitron font-bold text-xs text-white truncate" id="barTrackTitle">Risk It</p>
+                    <p class="text-[10px] text-gray-400 font-orbitron truncate">Mitchoutlandish</p>
+                </div>
+            </div>
+
+            <!-- Audio Controls -->
+            <div class="flex-1 max-w-md space-y-1">
+                <div class="flex items-center justify-center gap-4 text-sm text-gray-300">
+                    <button class="hover:text-emeraldGreen"><i class="fa-solid fa-backward-step"></i></button>
+                    <button id="barPlayBtn" onclick="toggleAudioPlay()" class="w-8 h-8 rounded-full bg-emeraldGreen text-black flex items-center justify-center text-xs hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-play"></i>
+                    </button>
+                    <button class="hover:text-emeraldGreen"><i class="fa-solid fa-forward-step"></i></button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] text-gray-400 font-orbitron" id="barCurrentTime">0:00</span>
+                    <input type="range" id="audioScrubber" value="0" max="100" class="w-full h-1 bg-purple-950 rounded-lg appearance-none cursor-pointer accent-emeraldGreen" oninput="updateScrubber(this.value)">
+                    <span class="text-[10px] text-gray-400 font-orbitron">2:45</span>
+                </div>
+            </div>
+
+            <!-- Volume Slider -->
+            <div class="flex items-center justify-end gap-2 w-1/4">
+                <i class="fa-solid fa-volume-high text-xs text-gray-400"></i>
+                <input type="range" value="80" max="100" class="w-20 h-1 bg-purple-950 rounded-lg appearance-none cursor-pointer accent-cosmicViolet hidden sm:block">
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Multi-Platform DistroKid Modal -->
+    <div id="multiPlatformModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-panel border border-cosmicViolet rounded-2xl max-w-md w-full p-6 space-y-6 relative shadow-glow-violet">
+            <button onclick="closeMultiPlatformModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">&times;</button>
+            
+            <div class="text-center space-y-3">
+                <div id="modalCoverContainer" class="w-36 h-36 mx-auto rounded-xl overflow-hidden border-2 border-emeraldGreen shadow-lg">
+                    <!-- SVG Cover injected dynamically -->
+                </div>
+                <div>
+                    <h3 class="font-orbitron font-extrabold text-xl text-white" id="modalTrackTitle">Track Title</h3>
+                    <p class="text-xs text-emeraldGreen font-orbitron tracking-widest mt-0.5" id="modalTrackType">SINGLE / ALBUM</p>
+                    <p class="text-[10px] text-gray-400 font-orbitron tracking-wider mt-1">MITCHOUTLANDISH • SELECT PLATFORM</p>
+                </div>
+            </div>
+
+            <!-- HyperFollow Direct Button if Available -->
+            <div id="modalHyperfollowBtn" class="hidden">
+                <a id="hyperfollowLink" href="#" target="_blank" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cosmicViolet to-emeraldGreen text-black font-orbitron font-extrabold text-xs flex items-center justify-between shadow-lg hover:opacity-90 transition-opacity">
+                    <span><i class="fa-solid fa-bolt text-base mr-2"></i> OPEN DISTROKID HYPERFOLLOW</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+
+            <div class="space-y-2.5">
+                <a href="https://open.spotify.com/artist/2cQruujOPlTXNHsZo3rvhR" target="_blank" class="w-full py-3 px-4 rounded-xl bg-emeraldGreen/20 border border-emeraldGreen/50 text-emeraldGreen hover:bg-emeraldGreen hover:text-black font-orbitron font-bold text-xs flex items-center justify-between transition-all">
+                    <span><i class="fa-brands fa-spotify text-base mr-2"></i> STREAM ON SPOTIFY</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+                <a href="https://music.apple.com/us/artist/mitchoutlandish/1758568790" target="_blank" class="w-full py-3 px-4 rounded-xl bg-applePink/20 border border-applePink/50 text-applePink hover:bg-applePink hover:text-white font-orbitron font-bold text-xs flex items-center justify-between transition-all">
+                    <span><i class="fa-brands fa-apple text-base mr-2"></i> APPLE MUSIC</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+                <a href="https://www.youtube.com/channel/UCuwQcfkjCwQ_ZLtFcyLFWMg" target="_blank" class="w-full py-3 px-4 rounded-xl bg-youtubeRed/20 border border-youtubeRed/50 text-youtubeRed hover:bg-youtubeRed hover:text-white font-orbitron font-bold text-xs flex items-center justify-between transition-all">
+                    <span><i class="fa-brands fa-youtube text-base mr-2"></i> WATCH ON YOUTUBE</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+                <a href="https://tidal.com" target="_blank" class="w-full py-3 px-4 rounded-xl bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 hover:bg-cyan-500 hover:text-black font-orbitron font-bold text-xs flex items-center justify-between transition-all">
+                    <span><i class="fa-solid fa-wave-square text-base mr-2"></i> TIDAL AUDIO</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+                <a href="https://music.amazon.com" target="_blank" class="w-full py-3 px-4 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 hover:bg-amber-500 hover:text-black font-orbitron font-bold text-xs flex items-center justify-between transition-all">
+                    <span><i class="fa-brands fa-amazon text-base mr-2"></i> AMAZON MUSIC</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Merch Side Drawer -->
+    <div id="merchDrawer" class="fixed top-0 right-0 h-full w-80 max-w-full z-50 glass-panel border-l border-cosmicViolet transform translate-x-full transition-transform duration-300 p-6 space-y-6">
+        <div class="flex items-center justify-between border-b border-purple-800/40 pb-4">
+            <h3 class="font-orbitron font-bold text-lg text-white"><i class="fa-solid fa-bag-shopping text-emeraldGreen mr-2"></i> OFFICIAL MERCH</h3>
+            <button onclick="toggleMerchDrawer()" class="text-gray-400 hover:text-white text-xl">&times;</button>
+        </div>
+
+        <div class="space-y-4">
+            <div class="glass-panel rounded-xl p-3 border border-white/10 space-y-2">
+                <div class="aspect-square bg-purple-950/80 rounded-lg flex items-center justify-center font-orbitron text-xs text-emeraldGreen border border-cosmicViolet/40 relative overflow-hidden">
+                    <i class="fa-solid fa-shirt text-5xl relative z-10 text-emeraldGreen"></i>
+                </div>
+                <h4 class="font-orbitron font-bold text-sm text-white">Outlandish Space Hoodie</h4>
+                <p class="text-xs text-emeraldGreen font-bold">$65.00 USD</p>
+            </div>
+            <p class="text-xs text-gray-400 font-orbitron text-center">Official merch drop coming soon!</p>
+        </div>
+    </div>
+
+    <!-- YouTube Video Modal -->
+    <div id="videoModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-panel border border-youtubeRed rounded-2xl max-w-2xl w-full p-4 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-orbitron font-bold text-lg text-white">YouTube Visuals Channel</h3>
+                <button onclick="toggleVideoModal()" class="text-gray-400 hover:text-white text-xl">&times;</button>
+            </div>
+            <div class="aspect-video w-full rounded-xl overflow-hidden bg-black">
+                <iframe class="w-full h-full" src="https://www.youtube.com/embed?listType=playlist&list=UUuwQcfkjCwQ_ZLtFcyLFWMg" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Space Nova Canvas Background
+        const canvas = document.getElementById('spaceCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.35;
+                this.speedY = (Math.random() - 0.5) * 0.35;
+                const colors = ['#8b5cf6', '#1db954', '#a855f7', '#ffffff'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.75 + 0.25;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
         }
 
-        function openMultiPlatformModal(title, type, accent, link) {
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        // Procedural SVG Cover Art Generator
+        function generateSpaceNovaSVG(title, badge, accent) {
+            const isGreen = accent === 'green';
+            const primaryColor = isGreen ? '#1db954' : '#8b5cf6';
+            const secondaryColor = isGreen ? '#8b5cf6' : '#1db954';
+
+            return `
+                <svg class="w-full h-full" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bgGrad_${title.replace(/\s+/g, '')}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0a0a0c" />
+                            <stop offset="50%" stop-color="#140f26" />
+                            <stop offset="100%" stop-color="#07120a" />
+                        </linearGradient>
+                        <radialGradient id="novaGlow_${title.replace(/\s+/g, '')}" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="${primaryColor}" stop-opacity="0.85" />
+                            <stop offset="60%" stop-color="${secondaryColor}" stop-opacity="0.2" />
+                            <stop offset="100%" stop-color="#0a0a0c" stop-opacity="0" />
+                        </radialGradient>
+                    </defs>
+
+                    <rect width="300" height="300" fill="url(#bgGrad_${title.replace(/\s+/g, '')})" />
+
+                    <g stroke="${secondaryColor}" stroke-opacity="0.12" stroke-width="0.5">
+                        <line x1="0" y1="50" x2="300" y2="50" />
+                        <line x1="0" y1="100" x2="300" y2="100" />
+                        <line x1="0" y1="150" x2="300" y2="150" />
+                        <line x1="0" y1="200" x2="300" y2="200" />
+                        <line x1="0" y1="250" x2="300" y2="250" />
+                        <line x1="50" y1="0" x2="50" y2="300" />
+                        <line x1="100" y1="0" x2="100" y2="300" />
+                        <line x1="150" y1="0" x2="150" y2="300" />
+                        <line x1="200" y1="0" x2="200" y2="300" />
+                        <line x1="250" y1="0" x2="250" y2="300" />
+                    </g>
+
+                    <circle cx="150" cy="140" r="110" fill="url(#novaGlow_${title.replace(/\s+/g, '')})" />
+                    <circle cx="150" cy="140" r="85" fill="none" stroke="${primaryColor}" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.6"/>
+                    <ellipse cx="150" cy="140" rx="100" ry="35" fill="none" stroke="${secondaryColor}" stroke-width="1.5" transform="rotate(-25 150 140)" opacity="0.7"/>
+                    <ellipse cx="150" cy="140" rx="90" ry="25" fill="none" stroke="${primaryColor}" stroke-width="1" transform="rotate(35 150 140)" opacity="0.5"/>
+
+                    <circle cx="80" cy="70" r="1.5" fill="#ffffff" opacity="0.9" />
+                    <circle cx="220" cy="80" r="2" fill="${primaryColor}" opacity="0.8" />
+                    <circle cx="60" cy="210" r="1" fill="${secondaryColor}" opacity="0.8" />
+                    <circle cx="240" cy="200" r="1.5" fill="#ffffff" opacity="0.9" />
+
+                    <text x="150" y="45" font-family="'Orbitron', sans-serif" font-size="10" font-weight="700" fill="${primaryColor}" letter-spacing="3" text-anchor="middle" opacity="0.9">MITCHOUTLANDISH</text>
+                    <text x="150" y="148" font-family="'Orbitron', sans-serif" font-size="18" font-weight="900" fill="#ffffff" letter-spacing="1" text-anchor="middle">${title.toUpperCase()}</text>
+
+                    <rect x="100" y="240" width="100" height="22" rx="11" fill="#0a0a0c" stroke="${primaryColor}" stroke-width="1" />
+                    <text x="150" y="255" font-family="'Orbitron', sans-serif" font-size="9" font-weight="800" fill="${primaryColor}" letter-spacing="2" text-anchor="middle">${badge}</text>
+                </svg>
+            `;
+        }
+
+        // Discography Releases Dataset
+        const releases = [
+            { title: "Outlandish", type: "album", badge: "FAVORITE ALBUM", accent: "violet", hyperfollow: "https://distrokid.com/hyperfollow/mtch4/outlandish?ref=release" },
+            { title: "Risk It", type: "single", badge: "NEW SINGLE", accent: "green", hyperfollow: "https://distrokid.com/hyperfollow/mitchoutlandish/risk-it?ref=release" },
+            { title: "Outlandish 2", type: "album", badge: "ALBUM", accent: "violet" },
+            { title: "Time Capsule", type: "ep", badge: "EP", accent: "green" },
+            { title: "U Mäkẽ me SIČĶ", type: "single", badge: "SINGLE", accent: "violet" },
+            { title: "Weekday", type: "single", badge: "SINGLE", accent: "green" },
+            { title: "Dead Presidents", type: "single", badge: "SINGLE", accent: "violet" },
+            { title: "Tell Me Sum", type: "single", badge: "SINGLE", accent: "green" }
+        ];
+
+        function renderDiscography(filter = 'all') {
+            const grid = document.getElementById('catalogGrid');
+            grid.innerHTML = '';
+
+            releases.forEach(rel => {
+                if (filter === 'all' || rel.type === filter) {
+                    const card = document.createElement('div');
+                    card.className = 'glass-panel glass-panel-hover rounded-2xl p-5 space-y-4 cursor-pointer relative group';
+                    card.onclick = () => openMultiPlatformModal(rel.title, rel.badge, rel.accent, rel.hyperfollow);
+
+                    const svgCover = generateSpaceNovaSVG(rel.title, rel.badge, rel.accent);
+
+                    card.innerHTML = `
+                        <div class="relative aspect-square rounded-xl overflow-hidden border border-cosmicViolet/30 bg-black shadow-lg">
+                            ${svgCover}
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                            <span class="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/85 text-emeraldGreen font-orbitron text-[10px] font-bold border border-emeraldGreen/40">
+                                ${rel.badge}
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="font-orbitron font-extrabold text-xl text-white group-hover:text-emeraldGreen transition-colors">${rel.title}</h3>
+                            <p class="text-xs text-cosmicViolet font-orbitron tracking-widest mt-0.5">MITCHOUTLANDISH</p>
+                            <button class="mt-4 w-full py-2.5 rounded-xl bg-emeraldGreen/20 text-emeraldGreen font-orbitron text-xs font-bold hover:bg-emeraldGreen hover:text-black transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-layer-group"></i> STREAM ON ALL PLATFORMS
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        function filterCatalog(type, btn) {
+            document.querySelectorAll('.catalog-btn').forEach(b => {
+                b.className = 'catalog-btn px-4 py-2 rounded-lg glass-panel text-white hover:border-emeraldGreen';
+            });
+            btn.className = 'catalog-btn px-4 py-2 rounded-lg bg-emeraldGreen text-black font-bold';
+            renderDiscography(type);
+        }
+
+        // Modal Controls
+        function openMultiPlatformModal(title, badge, accent = 'violet', hyperfollowUrl = null) {
             document.getElementById('modalTrackTitle').innerText = title;
-            document.getElementById('modalTrackType').innerText = type;
-            document.getElementById('hyperfollowBtn').href = link;
-            document.getElementById('hfSpotifyBtn').href = link;
-            document.getElementById('hfAppleBtn').href = link;
-            document.getElementById('hfYoutubeBtn').href = link;
+            document.getElementById('modalTrackType').innerText = badge;
+            document.getElementById('modalCoverContainer').innerHTML = generateSpaceNovaSVG(title, badge, accent);
+
+            const hfContainer = document.getElementById('modalHyperfollowBtn');
+            const hfLink = document.getElementById('hyperfollowLink');
+
+            if (hyperfollowUrl) {
+                hfLink.href = hyperfollowUrl;
+                hfContainer.classList.remove('hidden');
+            } else {
+                hfContainer.classList.add('hidden');
+            }
+
             document.getElementById('multiPlatformModal').classList.remove('hidden');
         }
 
@@ -280,49 +729,33 @@
             document.getElementById('multiPlatformModal').classList.add('hidden');
         }
 
-        // Background Stardust Animation
-        const canvas = document.getElementById('stardust');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = Array.from({ length: 60 }, () => ({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.8,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3,
-                alpha: Math.random()
-            }));
+        function toggleMerchDrawer() {
+            document.getElementById('merchDrawer').classList.toggle('translate-x-full');
         }
 
-        function animateCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                if (p.x < 0) p.x = canvas.width;
-                if (p.x > canvas.width) p.x = 0;
-                if (p.y < 0) p.y = canvas.height;
-                if (p.y > canvas.height) p.y = 0;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(16, 185, 129, ${p.alpha})`;
-                ctx.fill();
-            });
-            requestAnimationFrame(animateCanvas);
+        function toggleVideoModal() {
+            document.getElementById('videoModal').classList.toggle('hidden');
         }
 
-        window.onload = () => {
-            initCanvas();
-            animateCanvas();
+        // Audio Player Simulation
+        let isAudioPlaying = false;
+        function toggleAudioPlay() {
+            isAudioPlaying = !isAudioPlaying;
+            const btn = document.getElementById('barPlayBtn');
+            btn.innerHTML = isAudioPlaying ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+        }
+
+        function updateScrubber(val) {
+            const minutes = Math.floor((val * 1.65) / 60);
+            const seconds = Math.floor((val * 1.65) % 60).toString().padStart(2, '0');
+            document.getElementById('barCurrentTime').innerText = `${minutes}:${seconds}`;
+        }
+
+        window.onload = function() {
+            animate();
             renderDiscography();
+            document.getElementById('favoriteAlbumCover').innerHTML = generateSpaceNovaSVG('Outlandish', 'FAVORITE ALBUM', 'violet');
         };
-
-        window.onresize = initCanvas;
     </script>
 </body>
 </html>
